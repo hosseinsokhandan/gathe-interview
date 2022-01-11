@@ -1,0 +1,23 @@
+-- upgrade --
+CREATE TABLE IF NOT EXISTS "category" (
+    "id" SERIAL NOT NULL PRIMARY KEY
+);
+CREATE TABLE IF NOT EXISTS "document" (
+    "id" SERIAL NOT NULL PRIMARY KEY
+);
+CREATE TABLE IF NOT EXISTS "member" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "username" VARCHAR(128) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "categorypermission" (
+    "id" SERIAL NOT NULL PRIMARY KEY
+);
+CREATE TABLE IF NOT EXISTS "documentpermission" (
+    "id" SERIAL NOT NULL PRIMARY KEY
+);
+CREATE TABLE IF NOT EXISTS "aerich" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "version" VARCHAR(255) NOT NULL,
+    "app" VARCHAR(20) NOT NULL,
+    "content" JSONB NOT NULL
+);

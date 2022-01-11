@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from src.settings import settings
-from src.routers import document, permission, member
-from src.db import init_db
+from routers import document, permission, member
+from db import init_db
 
 
 app = FastAPI()

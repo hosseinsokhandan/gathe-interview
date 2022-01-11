@@ -1,12 +1,15 @@
 import os
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
+from settings import get_settings
 
-TORTOISE_ORM = {
-    "connections": {"default": os.environ.get("DATABASE_URL")},
+settings = get_settings()
+
+TORTOISE_ORM: dict = {
+    "connections": {"default": settings.DATABASE_URL},
     "apps": {
         "models": {
-            "models": ["models", "aerich.models"],
+            "models": settings.MODELS,
             "default_connection": "default",
         },
     },
@@ -16,8 +19,7 @@ TORTOISE_ORM = {
 def init_db(app: FastAPI) -> None:
     register_tortoise(
         app,
-        db_url=os.environ.get("DATABASE_URL"),
-        modules={"models": ["models"]},
+        config=TORTOISE_ORM,
         generate_schemas=False,
         add_exception_handlers=True,
     )
