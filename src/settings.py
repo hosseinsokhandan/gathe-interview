@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     DB_HOST: str = Field(default="127.0.0.1")
     DB_PORT: str = Field(default="5432")
     DB_NAME: str = Field(default="permission_system")
-    DB_USER: str = Field(default="auth")
-    DB_PASSWD: str = Field(default="123456")
+    DB_USER: str = Field(default="postgres")
+    DB_PASSWD: str = Field(default="postgres")
 
     MODELS: List = [
         "models.document",
@@ -25,11 +25,11 @@ class Settings(BaseSettings):
             return v
         return PostgresDsn.build(
             scheme="postgres",
-            user=values.get("DB_USER"),
-            password=values.get("DB_PASSWD"),
-            host=values.get("DB_HOST"),
-            port=values.get("DB_PORT"),
-            path=f"/{values.get('DB_NAME')}",
+            user=values["DB_USER"],
+            password=values["DB_PASSWD"],
+            host=values["DB_HOST"],
+            port=values["DB_PORT"],
+            path=f"/{values['DB_NAME']}",
         )
 
     class Config:
