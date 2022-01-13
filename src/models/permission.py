@@ -1,19 +1,26 @@
 from tortoise import Model, fields
 
 
-class CategoryPermission(Model):
+class Permission(Model):
+    member = fields.ForeignKeyField("models.Member")
+    can_create = fields.BooleanField(default=False)
+    can_read = fields.BooleanField(default=False)
+    can_update = fields.BooleanField(default=False)
+    can_delete = fields.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
+
+class CategoryPermission(Permission):
     category = fields.ForeignKeyField("models.Category", related_name="cat_permission")
-    member = fields.ForeignKeyField("models.Member", related_name="cat_permission")
-    can_create = fields.BooleanField(default=False)
-    can_read = fields.BooleanField(default=False)
-    can_update = fields.BooleanField(default=False)
-    can_delete = fields.BooleanField(default=False)
+
+    class Meta:
+        table = "category_permission"
 
 
-class DocumentPermission(Model):
+class DocumentPermission(Permission):
     document = fields.ForeignKeyField("models.Document", related_name="doc_permission")
-    member = fields.ForeignKeyField("models.Member", related_name="doc_permission")
-    can_create = fields.BooleanField(default=False)
-    can_read = fields.BooleanField(default=False)
-    can_update = fields.BooleanField(default=False)
-    can_delete = fields.BooleanField(default=False)
+
+    class Meta:
+        table = "document_permission"
