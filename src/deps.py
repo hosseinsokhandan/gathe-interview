@@ -1,5 +1,4 @@
-from fastapi import Request, HTTPException
-from fastapi.param_functions import Depends
+from fastapi import Request, HTTPException, Depends
 from models.member import Member
 from services.member import member_service
 from services.permission import permission_service

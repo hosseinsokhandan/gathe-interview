@@ -2,11 +2,9 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from fastapi.param_functions import Depends
 from deps import is_admin, get_current_user
-from models.document import Document
-from schemas.permission import PermissionDocumentSchema
 from services.permission import permission_service
 from services.document import document_service
-from schemas.document import DocumentSchema, DocumentInSchema
+from schemas.document import DocumentInUpdateSchema, DocumentSchema, DocumentInSchema
 from models.member import Member
 
 router = APIRouter()
@@ -52,15 +50,27 @@ async def get_document(
     raise HTTPException(status_code=403, detail="Forbidden")
 
 
-
-@router.put("/{document_id}", response_model=DocumentSchema)
-async def get_document(
+@router.delete("/{document_id}", response_model=DocumentSchema)
+async def delete_document(
     document_id: int,
-    document: DocumentInSchema,
     current_user: Member = Depends(get_current_user),
 ):
     if await permission_service.check_permission(
-        current_user, document_id, "can_read"
+        current_user, document_id, "can_delete"
+    ):
+        return await document_service.delete_document(document_id)
+    raise HTTPException(status_code=403, detail="Forbidden")
+
+
+
+@router.put("/{document_id}", response_model=DocumentSchema)
+async def update_document(
+    document_id: int,
+    document: DocumentInUpdateSchema,
+    current_user: Member = Depends(get_current_user),
+):
+    if await permission_service.check_permission(
+        current_user, document_id, "can_update"
     ):
         return await document_service.update(document_id, document)
     raise HTTPException(status_code=403, detail="Forbidden")

@@ -19,3 +19,7 @@ class DocumentInSchema(BaseModel):
     category_id: int
     subject: str
     content: str
+
+class DocumentInUpdateSchema(BaseModel):
+    subject: str
+    content: str

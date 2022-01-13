@@ -101,7 +101,7 @@ async def test_get_docuement_with_category_permission_admin(provide_test_data, a
 
 @pytest.mark.asyncio
 async def test_create_document_with_non_admin_user(provide_test_data, non_admin_header: dict):
-    a = await create_permission_helper(
+    await create_permission_helper(
         model=CategoryPermission,
         user=2,
         category_id=1,
@@ -112,12 +112,11 @@ async def test_create_document_with_non_admin_user(provide_test_data, non_admin_
     data = {
         "subject": "1",
         "content": "1",
-        "category_id": a.id
+        "category_id": 1
     }
     async with AsyncClient(app=app, base_url="http://test") as ac:
         response = await ac.post("document/", json=data, headers=non_admin_header)
         assert response.status_code == 200
-
 
 
 @pytest.mark.asyncio
@@ -130,4 +129,60 @@ async def test_create_document_with_admin_user(provide_test_data, admin_header: 
     }
     async with AsyncClient(app=app, base_url="http://test") as ac:
         response = await ac.post("document/", json=data, headers=admin_header)
+        assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_update_document_with_non_admin_user(provide_test_data, non_admin_header: dict):
+    await create_permission_helper(
+        model=CategoryPermission,
+        user=2,
+        category_id=1,
+        can_create=True,
+        can_update=True,
+        can_delete=False,
+    )
+    data = {
+        "subject": "Subject 1 --> 11",
+        "content": "Content 1 --> 11",
+    }
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.put("document/1", json=data, headers=non_admin_header)
+        assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_update_document_with_admin_user(provide_test_data, admin_header: dict):
+    data = {
+        "subject": "Subject 1 --> 11",
+        "content": "Content 1 --> 11",
+    }
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.put("document/3", json=data, headers=admin_header)
+        assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_delete_document_with_non_admin_user(provide_test_data, admin_header: dict):
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.delete("document/1", headers=admin_header)
+        assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_delete_document_with_non_admin_user(provide_test_data, non_admin_header: dict):
+
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.delete("document/3", headers=non_admin_header)
+        assert response.status_code == 403
+
+    await create_permission_helper(
+        model=DocumentPermission,
+        user=2,
+        document_id=3,
+        can_delete=True
+    )
+
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.delete("document/3", headers=non_admin_header)
         assert response.status_code == 200
