@@ -20,3 +20,7 @@ async def get_current_user(request: Request) -> Member:
 def admin_only(current_user: Member = Depends(get_current_user)):
     if not current_user.username == "admin":
         raise HTTPException(status_code=403, detail="Only admin is allowed!")
+
+
+def is_admin(current_user: Member = Depends(get_current_user)):
+    return current_user.username == "admin"
