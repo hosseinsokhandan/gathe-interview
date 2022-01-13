@@ -29,5 +29,15 @@ class PermissionService:
             can_create=permission_data.can_create,
         )
 
+    async def list_user_categories_id(self, member_id: int, **kwargs):
+        return await CategoryPermission.filter(
+            member_id=member_id, **kwargs
+        ).values_list("category_id", flat=True)
+
+    async def list_user_documents_id(self, member_id: int, **kwargs):
+        return await DocumentPermission.filter(
+            member_id=member_id, **kwargs
+        ).values_list("document_id", flat=True)
+
 
 permission_service = PermissionService()
