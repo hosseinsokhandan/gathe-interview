@@ -117,3 +117,32 @@ async def test_permission_list_user_documents_id(provide_test_data):
     assert update_documents == [3]
     assert create_documents == [2]
     assert delete_documents == [1]
+
+
+
+@pytest.mark.asyncio
+async def test_list_user_documents(provide_test_data):
+    await create_permission_helper(
+        model=DocumentPermission,
+        user=3,
+        document_id=1,
+        can_create=False,
+        can_update=False,
+    )
+    await create_permission_helper(
+        model=DocumentPermission,
+        user=3,
+        document_id=2,
+        can_update=False,
+        can_delete=False,
+    )
+    await create_permission_helper(
+        model=DocumentPermission,
+        user=3,
+        document_id=3,
+        can_read=False,
+        can_delete=False,
+        can_create=False,
+    )
+    documents = await permission_service.list_user_documents_id(3, can_read=True)
+    assert [1, 2] == documents

@@ -2,6 +2,8 @@ from fastapi import Request, HTTPException
 from fastapi.param_functions import Depends
 from models.member import Member
 from services.member import member_service
+from services.permission import permission_service
+import utils
 
 
 async def get_current_user(request: Request) -> Member:
@@ -18,9 +20,12 @@ async def get_current_user(request: Request) -> Member:
 
 
 def admin_only(current_user: Member = Depends(get_current_user)):
-    if not current_user.username == "admin":
+    if not utils.is_admin(current_user):
         raise HTTPException(status_code=403, detail="Only admin is allowed!")
 
 
 def is_admin(current_user: Member = Depends(get_current_user)):
-    return current_user.username == "admin"
+    return utils.is_admin(current_user)
+
+
+    

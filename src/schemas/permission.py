@@ -1,5 +1,5 @@
-from typing import Optional
-from pydantic import BaseModel, validator
+from typing import Any, Optional, Union
+from pydantic import BaseModel, validator, Field
 
 
 class PermissionInSchema(BaseModel):
@@ -32,3 +32,16 @@ class PermissionOutSchema(BaseModel):
 
     document_id: Optional[int] = None
     category_id: Optional[int] = None
+
+class PermissionDocumentSchema(BaseModel):
+    id: int
+    can_create: bool
+    can_read: bool
+    can_update: bool
+    can_delete: bool
+    author: Union[dict, int] = None
+    category: Union[dict, int] = None
+
+    class Config:
+        orm_mode = True
+    

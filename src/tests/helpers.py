@@ -11,7 +11,7 @@ async def create_permission_helper(
     **kwargs
 ):
 
-    await model.create(
+    return await model.create(
         member_id=user,
         can_read=can_read,
         can_delete=can_delete,
