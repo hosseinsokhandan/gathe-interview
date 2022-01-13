@@ -38,6 +38,7 @@ async def provide_test_data() -> None:
 
     await Category.create(id=1, name="Category 1")
     await Category.create(id=2, name="Category 2")
+    await Category.create(id=3, name="Category 3")
 
     await Document.create(
         id=1, subject="Subject 1", content="Content 1", author_id=1, category_id=1
